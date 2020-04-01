@@ -39,3 +39,19 @@ class SwfSpider(scrapy.Spider):
                                      callback=self.parseSecond)
     def parseSecond(self,response):
         fang= response.meta['fang']
+
+        div_list=response.xpath('//div[@id="newhouse_loupai_list"]//div[@class="nlc_details"]')
+
+        for div in div_list:
+            name=div.xpath('.//div[@class="nlcd_name"]/a/text()').extract_first().strip('\t\n')
+            # .xpath('string(.)')意思是将标签中子标签的文本进行拼接
+            # 他的调用者是seletor列表
+            price = div.xpath('.//div[@class="nhouse_price"]')
+            #判断在页面中获取到“class="nhouse_price”是否有值，例如：“价格待定”，标签值就变了
+            if price:
+                price=price.xpath('string(.)').extract_first().strip('\t\n').strip('广告').strip('\t\n')
+
+            fang['name']=name
+            fang['price']=price
+            yield fang
+            
