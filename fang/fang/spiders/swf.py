@@ -80,3 +80,4 @@ class SwfSpider(scrapy.Spider):
                 for i in range(page,int(num+1)):
                     url=url1 + 'b9' +str(i) + '/'
                     yield scrapy.Request(url=url,callback=self.parseSecond,meta={'fang':fang,'url':url1})
+                    break
