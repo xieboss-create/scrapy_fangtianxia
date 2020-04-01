@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 import scrapy
 
 from ..items import FangItem
@@ -54,4 +56,27 @@ class SwfSpider(scrapy.Spider):
             fang['name']=name
             fang['price']=price
             yield fang
-            
+
+            # 尾页的href的值  last() 就是xpath中获取最后一个数据的方法
+            href = response.xpath('//a[@class="last"][last()]/@href').extract_first()
+            # 有的城市只有一页 就不需要执行以下代码了
+            if href:
+                # /house/s/b932/
+                reg='/b9(\d+)/'
+                pattern = re.compile(reg)
+                # 尾页的数据拿到
+                num= pattern.findall(href)[0]
+                # https://newhouse.fang.com/house/s/
+                url = response.url
+                # https://newhouse.fang.com/house/s/b92/
+                # 3
+                # 当前页 + 1   尾页  page是当前页的页码
+                page = pattern.findall(url)
+                if len(page) == 0:
+                    page = 2
+                else:
+                    page = int(page[0]) + 1
+                url1 = response.meta['url']
+                for i in range(page,int(num+1)):
+                    url=url1 + 'b9' +str(i) + '/'
+                    yield scrapy.Request(url=url,callback=self.parseSecond,meta={'fang':fang,'url':url1})
