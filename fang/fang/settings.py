@@ -64,8 +64,16 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+B_HOST='127.0.0.1'
+DB_PORT=3306
+DB_USER='root'
+DB_PASSWORD='root'
+DB_NAME='fang'
+DB_CHARSET='utf8'
+
 ITEM_PIPELINES = {
-   'fang.pipelines.FangPipeline': 300,
+   # 'fang.pipelines.FangPipeline': 300,
+   'fang.pipelines.SaveDataPipeline':299,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

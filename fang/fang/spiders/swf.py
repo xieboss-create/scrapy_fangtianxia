@@ -8,7 +8,7 @@ from ..items import FangItem
 
 class SwfSpider(scrapy.Spider):
     name = 'swf'
-    allowed_domains = ['https://www.fang.com/SoufunFamily.htm']
+    allowed_domains = ['fang.com']
     start_urls = ['https://www.fang.com/SoufunFamily.htm']
 
     def parse(self, response):
@@ -77,7 +77,7 @@ class SwfSpider(scrapy.Spider):
                 else:
                     page = int(page[0]) + 1
                 url1 = response.meta['url']
-                for i in range(page,int(num+1)):
+                for i in range(page,int(num)+1):
                     url=url1 + 'b9' +str(i) + '/'
                     yield scrapy.Request(url=url,callback=self.parseSecond,meta={'fang':fang,'url':url1})
                     break
